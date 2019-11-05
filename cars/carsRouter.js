@@ -36,6 +36,9 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const newCar = req.body;
+  if (!newCar) {
+    return res.status(404).json({message: "Please add required fields"})
+  }
   carsDb('cars')
     .insert(newCar)
     .into('cars')//table
@@ -43,13 +46,25 @@ router.post('/', (req, res) => {
       res.status(200).json(ids)
     })
     .catch(error => {
-      console.log(error)
       res.status(500).json({message: 'Failed to add car.'})
     })
 })
 
 router.put('/:id', (req, res) => {
-
+  const id = req.params.id;
+  const changes = req.body;
+  if (!id) {
+    res.status(500).json({message: `No ${id} found for this car.`})
+  }
+  carsDb('cars')
+    .where('id', '=', id)
+    .update(changes)
+    .then(count => {
+      res.status(201).json(count)
+    })
+    .catch(error => {
+      res.status(500).json({message: `Failed to update car with id of ${id}`})
+    })
 })
 
 module.exports = router;
