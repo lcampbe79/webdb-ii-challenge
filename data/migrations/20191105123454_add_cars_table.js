@@ -7,7 +7,7 @@ exports.up = function(knex) {
     tbl.string('model', 125).notNullable();
     tbl.integer('mileage', 125).notNullable();
     tbl.string('transmission', 125);
-    tbl.string('status of title', 125);
+    tbl.string('status_of_title', 125);
     tbl.timestamps(true, true);
   })
 };
