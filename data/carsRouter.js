@@ -4,15 +4,17 @@ const carsDb = require('./dbconfig')
 
 const router = express.Router();
 
-// router.get('/', (req, res) => [
-//   carsDb.get()
-//     .then(cars => {
-//       res.status(200).json(cars)
-//     })
-//     .catch(error => {
-//       res.status(500).json({message: "Error getting the cars"})
-//     })
-// ])
+router.get('/', (req, res) => [
+  carsDb
+    .select('*')
+    .from('cars')
+    .then(cars => {
+      res.status(200).json(cars)
+    })
+    .catch(error => {
+      res.status(500).json({message: "Error getting the cars"})
+    })
+])
 
 router.post('/', (req, res) => {
   const newCar = req.body;
