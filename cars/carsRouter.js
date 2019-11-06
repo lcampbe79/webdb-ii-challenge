@@ -26,8 +26,13 @@ router.get('/:id', (req, res) => {
     .select('*')
     .from('cars')
     .where('id', '=', id)
+    .first()
     .then(cars => {
-      res.status(200).json(cars)
+      if (cars){
+        res.status(200).json(cars)
+      } else {
+        res.status(404).json({message: "Unable to find car with id"})
+      }
     })
     .catch(error => {
       res.status(500).json({error: `Unable to get car with id ${id}`})
@@ -37,13 +42,13 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const newCar = req.body;
   if (!newCar.vin) {
-    return res.status(404).json({message: "Please add VIN"})
+    return res.status(400).json({message: "Please add VIN"})
   } else if (!newCar.make) {
-    return res.status(404).json({message: "Please add make"})
+    return res.status(400).json({message: "Please add make"})
   } else if (!newCar.model) {
-    return res.status(404).json({message: "Please add model"})
+    return res.status(400).json({message: "Please add model"})
   } else if (!newCar.mileage) {
-    return res.status(404).json({message: "Please add mileage"})
+    return res.status(400).json({message: "Please add mileage"})
   }
   carsDb('cars')
     .insert(newCar)
@@ -67,7 +72,11 @@ router.put('/:id', (req, res) => {
     .where('id', '=', id)
     .update(changes)
     .then(count => {
-      res.status(201).json(count)
+      if(count) {
+        res.status(201).json(count)
+      } else {
+        res.status(404).json({message: "No car found with this id"})
+      }
     })
     .catch(error => {
       res.status(500).json({message: `Failed to update car with id of ${id}`})
