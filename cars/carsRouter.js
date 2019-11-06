@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(500).json({message: 'Failed to add car.'})
+      res.status(500).json({message: 'Failed to add car. The car may already exist.'})
     })
 })
 
