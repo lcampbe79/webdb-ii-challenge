@@ -36,8 +36,14 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const newCar = req.body;
-  if (!newCar) {
-    return res.status(404).json({message: "Please add required fields"})
+  if (!newCar.vin) {
+    return res.status(404).json({message: "Please add VIN"})
+  } else if (!newCar.make) {
+    return res.status(404).json({message: "Please add make"})
+  } else if (!newCar.model) {
+    return res.status(404).json({message: "Please add model"})
+  } else if (!newCar.mileage) {
+    return res.status(404).json({message: "Please add mileage"})
   }
   carsDb('cars')
     .insert(newCar)
@@ -46,6 +52,7 @@ router.post('/', (req, res) => {
       res.status(200).json(ids)
     })
     .catch(error => {
+      console.log(error)
       res.status(500).json({message: 'Failed to add car.'})
     })
 })
@@ -54,7 +61,7 @@ router.put('/:id', (req, res) => {
   const id = req.params.id;
   const changes = req.body;
   if (!id) {
-    res.status(500).json({message: `No ${id} found for this car.`})
+    res.status(404).json({message: `No ${id} found for this car.`})
   }
   carsDb('cars')
     .where('id', '=', id)
